@@ -122,22 +122,6 @@
 
     <iframe id="portalIframe" src="about:blank" class="w-screen h-screen border-0 bg-white block" allow="fullscreen *; camera; microphone" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
   </div>
-      </div>
-      <div class="flex items-center gap-2 shrink-0">
-        <span class="px-2.5 py-1 rounded-lg bg-white/10 text-[11px] font-mono font-bold">
-          Pelanggaran: <span id="overlayViolationCount">0</span>
-        </span>
-        <button type="button" onclick="openPortalExternalTab()" title="Buka di tab baru jika formulir butuh login Google" class="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[11px] font-bold">Tab Baru</button>
-        <button type="button" onclick="toggleAppFullscreen()" title="Layar Penuh" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
-          </svg>
-        </button>
-        <button type="button" onclick="finishExamSession()" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold">Selesai</button>
-      </div>
-    </div>
-    <iframe id="portalIframe" src="about:blank" class="w-full flex-1 border-0 bg-white" allow="fullscreen; camera; microphone" allowfullscreen></iframe>
-  </div>
 
   <!-- HALAMAN LOGIN -->
   <div id="loginView" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
@@ -791,11 +775,11 @@
       var overlayEl = document.getElementById("portalOverlay");
       if (iframeEl) iframeEl.src = activePortalUrl;
       if (overlayEl) overlayEl.classList.remove("hidden");
-      showToast("Portal Ujian dibuka layar penuh. Pengawasan aktif.");
+      showToast("Portal Ujian dibuka layar penuh di dalam aplikasi.");
     }
 
     function openPortalExternalTab() {
-      window.open(activePortalUrl || DEFAULT_PORTAL_URL, "_blank", "noopener,noreferrer");
+      showToast("Portal dikunci di dalam layar penuh aplikasi untuk mencegah kecurangan.", true);
     }
 
     async function finishExamSession() {
