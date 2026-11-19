@@ -771,11 +771,39 @@
       }
 
       updatePesertaStats();
-      var iframeEl = document.getElementById("portalIframe");
-      var overlayEl = document.getElementById("portalOverlay");
-      if (iframeEl) iframeEl.src = activePortalUrl;
-      if (overlayEl) overlayEl.classList.remove("hidden");
-      showToast("Portal Ujian dibuka layar penuh di dalam aplikasi.");
+
+      // Google Sites memblokir iframe (X-Frame-Options: SAMEORIGIN).
+      // Jika aplikasi berjalan dalam mode PWA terinstal (standalone/fullscreen),
+      // membuka di jendela yang sama (window.location.href) membuat Google Sites
+      // tampil 100% fullscreen tanpa address bar Chrome dan tanpa blokir.
+      var isStandalone = window.matchMedia("(display-mode: fullscreen)").matches ||
+                         window.matchMedia("(display-mode: standalone)").matches ||
+                         window.navigator.standalone === true;
+
+      if (isStandalone) {
+        showToast("Membuka Portal Ujian MAN 4 HST layar penuh...");
+        setTimeout(function () {
+          window.location.href = activePortalUrl;
+        }, 300);
+      } else {
+        // Jika dibuka dari browser biasa, buka jendela popup penuh tanpa toolbar URL
+        var w = window.screen.availWidth || window.innerWidth;
+        var h = window.screen.availHeight || window.innerHeight;
+        var popup = window.open(
+          activePortalUrl,
+          "PortalUjianMAN4HST",
+          "width=" + w + ",height=" + h + ",top=0,left=0,toolbar=no,menubar=no,location=no,status=no,scrollbars=yes,resizable=yes"
+        );
+        if (!popup || popup.closed) {
+          window.location.href = activePortalUrl;
+        } else {
+          showToast("Portal Ujian dibuka di jendela khusus tanpa address bar.");
+        }
+      }
+    }
+
+    function openPortalExternalTab() {
+      window.location.href = activePortalUrl;
     }
 
     function openPortalExternalTab() {
