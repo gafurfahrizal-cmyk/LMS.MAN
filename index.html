@@ -10,7 +10,8 @@
   <meta name="apple-mobile-web-app-title" content="LMS MAN4HST" />
   <title>LMS Anti Curang — MAN 4 HST</title>
   <link rel="manifest" href="/manifest.json" />
-  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==" />
+  <link id="appleIconLink" rel="apple-touch-icon" href="/icon-192.png" />
+  <link id="favIconLink" rel="icon" type="image/png" href="/icon-192.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -93,14 +94,34 @@
   </div>
 
   <!-- OVERLAY PORTAL UJIAN FULLSCREEN -->
-  <div id="portalOverlay" class="hidden fixed inset-0 z-50 bg-slate-950 flex flex-col">
-    <div class="bg-slate-900 text-white px-3.5 py-2.5 flex items-center justify-between gap-2 border-b border-white/10 shrink-0">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-        <div class="min-w-0">
-          <p class="text-xs font-extrabold tracking-wide text-purple-300 truncate">UJIAN BERLANGSUNG • ANTI CURANG AKTIF</p>
-          <p class="text-[11px] text-slate-400 truncate">Jangan berpindah tab atau keluar layar penuh</p>
-        </div>
+  <div id="portalOverlay" class="hidden fixed inset-0 z-50 bg-black flex flex-col">
+    <!-- Floating Pill Bar Minimalis di Pojok Atas agar Area Google Sites 100% Fullscreen -->
+    <div id="floatingExamControls" class="fixed top-2 right-2 z-[60] flex items-center gap-1.5 bg-slate-900/85 backdrop-blur-md text-white px-2.5 py-1.5 rounded-full shadow-lg border border-white/15">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="text-[11px] font-mono font-bold px-1">P:<span id="overlayViolationCount">0</span></span>
+      <button type="button" onclick="openPortalExternalTab()" title="Buka di tab baru" class="px-2 py-0.5 rounded-full bg-white/15 hover:bg-white/25 text-[10px] font-bold">Tab</button>
+      <button type="button" onclick="toggleAppFullscreen()" title="Paksa Layar Penuh" class="p-1 rounded-full bg-white/15 hover:bg-white/25">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+        </svg>
+      </button>
+      <button type="button" onclick="finishExamSession()" class="px-2.5 py-0.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-[11px] font-extrabold">Selesai</button>
+    </div>
+
+    <!-- Banner Re-lock Fullscreen jika siswa keluar dari mode layar penuh -->
+    <div id="fullscreenLockBanner" onclick="enterAppFullscreen()" class="hidden fixed inset-0 z-[70] bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center text-white cursor-pointer">
+      <div class="w-16 h-16 rounded-3xl hero-gradient flex items-center justify-center mb-4 shadow-xl">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-extrabold mb-1">Mode Layar Penuh Terlepas</h3>
+      <p class="text-xs text-slate-300 max-w-xs mb-5">Ketuk layar ini di mana saja untuk kembali ke layar penuh dan melanjutkan ujian di Google Sites.</p>
+      <button type="button" onclick="enterAppFullscreen()" class="btn-primary-grad text-white font-extrabold text-sm px-6 py-3 rounded-2xl shadow-lg">Kembali Fullscreen</button>
+    </div>
+
+    <iframe id="portalIframe" src="about:blank" class="w-screen h-screen border-0 bg-white block" allow="fullscreen *; camera; microphone" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
+  </div>
       </div>
       <div class="flex items-center gap-2 shrink-0">
         <span class="px-2.5 py-1 rounded-lg bg-white/10 text-[11px] font-mono font-bold">
@@ -447,24 +468,45 @@
     function enterAppFullscreen() {
       try {
         var el = document.documentElement;
-        if (!document.fullscreenElement && el.requestFullscreen) {
-          el.requestFullscreen().catch(function () {});
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          var req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+          if (req) {
+            var p = req.call(el);
+            if (p && p.catch) p.catch(function () {});
+          }
         }
+        var lockBanner = document.getElementById("fullscreenLockBanner");
+        if (lockBanner) lockBanner.classList.add("hidden");
       } catch (e) {}
     }
 
     function toggleAppFullscreen() {
       try {
-        if (!document.fullscreenElement) {
-          var el = document.documentElement;
-          if (el.requestFullscreen) {
-            el.requestFullscreen().catch(function () {});
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          enterAppFullscreen();
+        } else {
+          var exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+          if (exit) {
+            var p = exit.call(document);
+            if (p && p.catch) p.catch(function () {});
           }
-        } else if (document.exitFullscreen) {
-          document.exitFullscreen().catch(function () {});
         }
       } catch (e) {}
     }
+
+    function handleFullscreenChange() {
+      var isFs = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+      var lockBanner = document.getElementById("fullscreenLockBanner");
+      if (!isFs && examActive && currentRole === "peserta") {
+        if (lockBanner) lockBanner.classList.remove("hidden");
+        recordViolation("Keluar dari mode layar penuh saat membuka portal Google Sites");
+      } else if (lockBanner) {
+        lockBanner.classList.add("hidden");
+      }
+    }
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
 
     document.addEventListener("pointerdown", function () {
       if (currentUser || examActive) {
@@ -760,6 +802,8 @@
       examActive = false;
       var iframeEl = document.getElementById("portalIframe");
       var overlayEl = document.getElementById("portalOverlay");
+      var lockBanner = document.getElementById("fullscreenLockBanner");
+      if (lockBanner) lockBanner.classList.add("hidden");
       if (overlayEl) overlayEl.classList.add("hidden");
       if (iframeEl) iframeEl.src = "about:blank";
 
