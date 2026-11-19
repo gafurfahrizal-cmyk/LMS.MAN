@@ -270,7 +270,7 @@
                     <p id="portalUrlPreview" class="text-xs text-slate-500 truncate"></p>
                   </div>
                 </div>
-                <button type="button" onclick="openPortalLangsung()" class="w-full sm:w-auto btn-primary-grad text-white font-extrabold text-sm px-6 py-3 rounded-2xl shadow-md flex items-center justify-center gap-2 shrink-0">
+                <button type="button" onclick="openPortalLangsung(DEFAULT_PORTAL_URL)" class="w-full sm:w-auto btn-primary-grad text-white font-extrabold text-sm px-6 py-3 rounded-2xl shadow-md flex items-center justify-center gap-2 shrink-0">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z" />
                   </svg>
@@ -285,7 +285,7 @@
                 <button type="button" id="btnFilterSemua" onclick="setSubjectFilter('semua')" class="btn-emerald-grad text-white font-extrabold text-sm px-7 py-3 rounded-2xl shadow-md transition">
                   Semua
                 </button>
-                <button type="button" id="btnFilterPortal" onclick="openPortalLangsung()" class="btn-primary-grad text-white font-extrabold text-sm px-7 py-3 rounded-2xl shadow-md flex items-center gap-2 transition">
+                <button type="button" id="btnFilterPortal" onclick="openPortalLangsung(DEFAULT_PORTAL_URL)" class="btn-primary-grad text-white font-extrabold text-sm px-7 py-3 rounded-2xl shadow-md flex items-center gap-2 transition">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
@@ -326,7 +326,7 @@
               <p class="text-xs sm:text-sm text-white/85">MAN 4 Hulu Sungai Tengah</p>
             </div>
             <div class="flex items-center gap-2">
-              <button type="button" onclick="openPortalLangsung()" class="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition">Buka Portal</button>
+              <button type="button" onclick="openPortalLangsung(DEFAULT_PORTAL_URL)" class="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition">Buka Portal</button>
               <button type="button" onclick="logoutApp()" class="px-4 py-2 rounded-xl bg-white text-purple-700 hover:bg-purple-50 text-xs font-extrabold transition">Keluar</button>
             </div>
           </div>
@@ -818,7 +818,8 @@
 
     async function openPortalLangsung(customUrl) {
       enterAppFullscreen();
-      var chosenUrl = customUrl || (stateData.jadwal.length > 0 && stateData.jadwal[0].url ? stateData.jadwal[0].url : DEFAULT_PORTAL_URL);
+      // Selalu gunakan DEFAULT_PORTAL_URL jika tidak ada URL khusus yang dikirim dari kartu mapel
+      var chosenUrl = customUrl || DEFAULT_PORTAL_URL;
       activePortalUrl = formatEmbeddableExamUrl(chosenUrl);
       examActive = true;
 
@@ -964,7 +965,7 @@
 
       if (items.length > 0 && items[0].url) {
         var previewUrlEl = document.getElementById("portalUrlPreview");
-        if (previewUrlEl) previewUrlEl.textContent = items[0].judul + " (" + items[0].mapel + ")";
+        if (previewUrlEl) previewUrlEl.textContent = DEFAULT_PORTAL_URL;
       }
 
       badgeEl.textContent = items.length + " Ujian";
