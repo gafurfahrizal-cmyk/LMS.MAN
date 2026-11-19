@@ -72,7 +72,6 @@
     var IS_PREVIEW = false;
     var SUPABASE_URL = "https://fojendbtroejyeizbigz.supabase.co";
     var SUPABASE_ANON_KEY = "sb_publishable_hzVPz1ssDL00xAGHeQ6V1A_1Fv2EMbA";
-    var DEFAULT_PORTAL_URL = "";
   </script>
 
   <!-- Toast Notifikasi -->
@@ -288,17 +287,17 @@
                 <button type="button" id="btnFilterPortal" onclick="openPortalLangsung(DEFAULT_PORTAL_URL)" class="btn-primary-grad text-white font-extrabold text-sm px-7 py-3 rounded-2xl shadow-md flex items-center gap-2 transition">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
-                  </svg>
-                  <span>Portal Ujian</span>
-                </button>
-              </div>
+          <!-- SUBMENU 1: DAFTAR SOAL UJIAN -->
+          <div id="pesertaTabPortal" class="space-y-5">
+            <div class="space-y-2.5">
+              <h3 class="text-sm font-extrabold text-slate-800">Daftar Mata Pelajaran</h3>
+              <div id="subjectFilterBar" class="flex flex-wrap items-center gap-2"></div>
             </div>
 
             <div class="space-y-3">
               <div class="flex items-center justify-between">
-                <h3 class="text-sm font-extrabold text-slate-800">Jadwal &amp; Portal Ujian</h3>
-                <span id="jadwalCountBadge" class="text-xs font-semibold text-slate-500">0 Ujian</span>
+                <h3 class="text-sm font-extrabold text-slate-800">Soal Ujian Aktif</h3>
+                <span id="jadwalCountBadge" class="text-xs font-semibold text-slate-500">0 Soal</span>
               </div>
               <div id="jadwalUjianList" class="grid grid-cols-1 md:grid-cols-2 gap-3.5"></div>
             </div>
@@ -322,11 +321,10 @@
           <div class="hero-gradient rounded-3xl p-5 sm:p-6 text-white shadow-lg flex flex-wrap items-center justify-between gap-4">
             <div>
               <span class="inline-block px-3 py-1 rounded-full bg-white/20 text-[11px] font-bold uppercase tracking-wider mb-1.5">Panel Pengawas &amp; Admin</span>
-              <h2 class="text-xl sm:text-2xl font-extrabold">Monitoring &amp; Manajemen Peserta</h2>
+              <h2 class="text-xl sm:text-2xl font-extrabold">Monitoring &amp; Manajemen Ujian</h2>
               <p class="text-xs sm:text-sm text-white/85">MAN 4 Hulu Sungai Tengah</p>
             </div>
             <div class="flex items-center gap-2">
-              <button type="button" onclick="openPortalLangsung(DEFAULT_PORTAL_URL)" class="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition">Buka Portal</button>
               <button type="button" onclick="logoutApp()" class="px-4 py-2 rounded-xl bg-white text-purple-700 hover:bg-purple-50 text-xs font-extrabold transition">Keluar</button>
             </div>
           </div>
@@ -361,22 +359,16 @@
                   <input id="newJadwalJudul" type="text" required placeholder="Cth: Sumatif Akhir Semester XI" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm" />
                 </div>
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div class="sm:col-span-2">
-                  <label class="block text-xs font-semibold text-slate-700 mb-1">Link Google Form / URL Soal</label>
-                  <input id="newJadwalUrl" type="url" required placeholder="https://docs.google.com/forms/d/e/.../viewform" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm" />
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-slate-700 mb-1">Durasi Ujian</label>
-                  <input id="newJadwalDurasi" type="text" required value="90 Menit" placeholder="90 Menit" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm" />
-                </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Link Google Form / URL Soal</label>
+                <input id="newJadwalUrl" type="url" required placeholder="https://docs.google.com/forms/d/e/.../viewform" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm" />
               </div>
               <p class="text-[11px] text-slate-500">Sistem otomatis mengubah link Google Form ke mode sematan layar penuh (<code>?embedded=true</code>) saat dikerjakan peserta.</p>
-              <button type="submit" class="btn-primary-grad text-white font-bold text-xs px-5 py-3 rounded-xl shadow">Simpan &amp; Terbitkan Soal</button>
+              <button type="submit" class="btn-primary-grad text-white font-bold text-xs px-5 py-3 rounded-xl shadow">Simpan Soal</button>
             </form>
 
             <div class="glass-card rounded-3xl p-5 border border-slate-100 space-y-2.5">
-              <h3 class="text-base font-extrabold text-slate-900">Daftar Soal &amp; Link Google Form Aktif</h3>
+              <h3 class="text-base font-extrabold text-slate-900">Daftar Soal &amp; Kontrol Aktif / Nonaktif</h3>
               <div id="adminJadwalList" class="space-y-2"></div>
             </div>
           </div>
@@ -434,7 +426,7 @@
     var subjectFilter = "semua";
     var examActive = false;
     var violationCount = 0;
-    var activePortalUrl = DEFAULT_PORTAL_URL;
+    var activePortalUrl = "";
 
     var stateData = {
       peserta: IS_PREVIEW ? [
@@ -443,23 +435,32 @@
       jadwal: IS_PREVIEW ? [
         {
           id: "j-1",
-          mapel: "Portal Utama Ujian",
-          judul: "Portal Ujian MAN 4 HST",
-          url: DEFAULT_PORTAL_URL,
-          durasi: "90 Menit",
-          status: "Aktif"
+          mapel: "Simulasi Ujian",
+          judul: "Contoh Soal Google Form",
+          url: "https://docs.google.com/forms/d/e/1FAIpQLSfDummy/viewform",
+          is_active: true
         }
       ] : [],
       materi: IS_PREVIEW ? [
         {
           id: "m-1",
           judul: "Tata Tertib Ujian Anti Curang",
-          konten: "Klik Mulai Ujian untuk membuka portal resmi MAN 4 HST. Jangan berpindah tab atau keluar layar penuh selama ujian berlangsung.",
+          konten: "Pilih soal ujian yang aktif lalu klik Mulai. Jangan berpindah tab atau keluar layar penuh selama ujian berlangsung.",
           tanggal: "2026"
         }
       ] : [],
       logs: []
     };
+
+    function isSoalActive(item) {
+      if (!item) return false;
+      if (typeof item.is_active === "boolean") return item.is_active;
+      if (typeof item.status === "string") {
+        var s = item.status.toLowerCase();
+        return s === "aktif" || s === "active" || s === "true";
+      }
+      return true;
+    }
 
     function getPesertaDisplayName(p) {
       if (!p) return "Peserta";
@@ -682,7 +683,6 @@
     function openMainApp() {
       document.getElementById("loginView").classList.add("hidden");
       document.getElementById("appShell").classList.remove("hidden");
-      document.getElementById("portalUrlPreview").textContent = DEFAULT_PORTAL_URL;
 
       if (currentRole === "admin") {
         document.getElementById("sidebarRoleLabel").textContent = "Panel Pengawas";
@@ -725,7 +725,7 @@
 
     function renderPesertaNav() {
       var items = [
-        { id: "portal", label: "Portal Ujian" },
+        { id: "portal", label: "Soal Ujian" },
         { id: "materi", label: "Materi & Info" },
         { id: "integritas", label: "Integritas" }
       ];
@@ -806,7 +806,7 @@
     }
 
     function formatEmbeddableExamUrl(rawUrl) {
-      if (!rawUrl) return DEFAULT_PORTAL_URL;
+      if (!rawUrl) return "";
       var u = rawUrl.trim();
       if (u.indexOf("docs.google.com/forms") !== -1) {
         if (u.indexOf("embedded=true") === -1) {
@@ -817,10 +817,12 @@
     }
 
     async function openPortalLangsung(customUrl) {
+      if (!customUrl) {
+        showToast("Link soal Google Form belum tersedia.", true);
+        return;
+      }
       enterAppFullscreen();
-      // Selalu gunakan DEFAULT_PORTAL_URL jika tidak ada URL khusus yang dikirim dari kartu mapel
-      var chosenUrl = customUrl || DEFAULT_PORTAL_URL;
-      activePortalUrl = formatEmbeddableExamUrl(chosenUrl);
+      activePortalUrl = formatEmbeddableExamUrl(customUrl);
       examActive = true;
 
       if (currentUser) {
@@ -834,40 +836,11 @@
 
       updatePesertaStats();
 
-      // Jika link adalah Google Form (docs.google.com/forms) atau URL non-Google Sites,
-      // muat di dalam iframe 100% fullscreen agar bilah URL Chrome hilang sepenuhnya
-      if (activePortalUrl.indexOf("sites.google.com") === -1) {
-        var overlayEl = document.getElementById("portalOverlay");
-        var iframeEl = document.getElementById("portalIframe");
-        if (iframeEl) iframeEl.src = activePortalUrl;
-        if (overlayEl) overlayEl.classList.remove("hidden");
-        showToast("Soal Ujian dibuka 100% layar penuh. Pengawasan aktif.");
-        return;
-      }
-
-      var isStandalone = window.matchMedia("(display-mode: fullscreen)").matches ||
-                         window.matchMedia("(display-mode: standalone)").matches ||
-                         window.navigator.standalone === true;
-
-      if (isStandalone) {
-        showToast("Membuka Portal Ujian MAN 4 HST layar penuh...");
-        setTimeout(function () {
-          window.location.href = activePortalUrl;
-        }, 300);
-      } else {
-        var w = window.screen.availWidth || window.innerWidth;
-        var h = window.screen.availHeight || window.innerHeight;
-        var popup = window.open(
-          activePortalUrl,
-          "PortalUjianMAN4HST",
-          "width=" + w + ",height=" + h + ",top=0,left=0,toolbar=no,menubar=no,location=no,status=no,scrollbars=yes,resizable=yes"
-        );
-        if (!popup || popup.closed) {
-          window.location.href = activePortalUrl;
-        } else {
-          showToast("Portal Ujian dibuka di jendela khusus tanpa address bar.");
-        }
-      }
+      var overlayEl = document.getElementById("portalOverlay");
+      var iframeEl = document.getElementById("portalIframe");
+      if (iframeEl) iframeEl.src = activePortalUrl;
+      if (overlayEl) overlayEl.classList.remove("hidden");
+      showToast("Soal Ujian dibuka 100% layar penuh. Pengawasan aktif.");
     }
 
     function openPortalExternalTab() {
@@ -937,6 +910,7 @@
     async function refreshPesertaViews() {
       var listEl = document.getElementById("jadwalUjianList");
       var badgeEl = document.getElementById("jadwalCountBadge");
+      var filterBarEl = document.getElementById("subjectFilterBar");
       var items = IS_PREVIEW ? stateData.jadwal : [];
 
       if (!IS_PREVIEW && sbClient) {
@@ -954,7 +928,7 @@
                   mapel: s.mata_pelajaran,
                   judul: s.judul_ujian,
                   url: s.url_portal,
-                  durasi: (s.durasi_menit || 90) + " Menit"
+                  is_active: s.is_active !== false
                 };
               });
               stateData.jadwal = items;
@@ -963,24 +937,45 @@
         } catch (e) {}
       }
 
-      if (items.length > 0 && items[0].url) {
-        var previewUrlEl = document.getElementById("portalUrlPreview");
-        if (previewUrlEl) previewUrlEl.textContent = DEFAULT_PORTAL_URL;
+      // Hanya tampilkan soal yang statusnya Aktif untuk peserta
+      var activeItems = items.filter(isSoalActive);
+
+      // Render filter mata pelajaran dinamis
+      if (filterBarEl) {
+        var mapels = [];
+        activeItems.forEach(function (it) {
+          var m = (it.mapel || "").trim();
+          if (m && mapels.indexOf(m) === -1) mapels.push(m);
+        });
+        var btns = ['<button type="button" onclick="setSubjectFilter(\'semua\')" class="px-4 py-2 rounded-2xl text-xs font-extrabold transition ' +
+          (subjectFilter === "semua" ? "btn-emerald-grad text-white shadow" : "bg-white text-slate-700 border border-slate-200") +
+          '">Semua (' + activeItems.length + ')</button>'];
+        mapels.forEach(function (m) {
+          var isAct = subjectFilter === m;
+          btns.push('<button type="button" onclick="setSubjectFilter(\'' + m.replace(/'/g, "\\'") + '\')" class="px-4 py-2 rounded-2xl text-xs font-bold transition ' +
+            (isAct ? "btn-primary-grad text-white shadow" : "bg-white text-slate-700 border border-slate-200") +
+            '">' + m + '</button>');
+        });
+        filterBarEl.innerHTML = btns.join("");
       }
 
-      badgeEl.textContent = items.length + " Ujian";
-      if (!items.length) {
-        listEl.innerHTML = '<div class="glass-card rounded-2xl p-5 text-xs text-slate-500">Belum ada jadwal tambahan di database. Gunakan tombol <strong>Mulai Ujian</strong> di atas.</div>';
+      var filteredItems = subjectFilter === "semua"
+        ? activeItems
+        : activeItems.filter(function (it) { return (it.mapel || "").trim() === subjectFilter; });
+
+      badgeEl.textContent = filteredItems.length + " Soal Aktif";
+      if (!filteredItems.length) {
+        listEl.innerHTML = '<div class="glass-card rounded-2xl p-5 text-xs text-slate-500 col-span-full">Belum ada soal ujian yang diaktifkan oleh pengawas.</div>';
       } else {
-        listEl.innerHTML = items.map(function (it) {
-          var u = it.url || DEFAULT_PORTAL_URL;
-          return '<div class="glass-card rounded-2xl p-4 border border-slate-100 flex items-center justify-between gap-3">' +
+        listEl.innerHTML = filteredItems.map(function (it) {
+          var u = it.url || "";
+          return '<div class="glass-card rounded-2xl p-4 border border-purple-100 flex items-center justify-between gap-3">' +
             '<div class="min-w-0">' +
-              '<span class="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 mb-1">' + (it.mapel || "Portal") + "</span>" +
-              '<h4 class="text-sm font-extrabold text-slate-900 truncate">' + (it.judul || "Portal Ujian MAN 4 HST") + "</h4>" +
-              '<p class="text-xs text-slate-500">Durasi: ' + (it.durasi || "90 Menit") + "</p>" +
+              '<span class="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 mb-1">' + (it.mapel || "Mata Pelajaran") + "</span>" +
+              '<h4 class="text-sm font-extrabold text-slate-900 truncate">' + (it.judul || "Soal Ujian") + "</h4>" +
+              '<p class="text-[11px] text-emerald-600 font-semibold mt-0.5">● Siap Dikerjakan (Layar Penuh)</p>' +
             "</div>" +
-            '<button type="button" onclick="openPortalLangsung(\'' + u.replace(/'/g, "\\'") + '\')" class="btn-primary-grad text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shrink-0">Mulai</button>' +
+            '<button type="button" onclick="openPortalLangsung(\'' + u.replace(/'/g, "\\'") + '\')" class="btn-primary-grad text-white text-xs font-extrabold px-5 py-2.5 rounded-xl shrink-0 shadow">Mulai</button>' +
           "</div>";
         }).join("");
       }
@@ -1039,7 +1034,7 @@
                   mapel: s.mata_pelajaran,
                   judul: s.judul_ujian,
                   url: s.url_portal,
-                  durasi: (s.durasi_menit || 90) + " Menit",
+                  is_active: s.is_active !== false,
                   _fromSesi: true
                 };
               });
@@ -1062,13 +1057,24 @@
       if (jList) {
         jList.innerHTML = stateData.jadwal.length
           ? stateData.jadwal.map(function (j, idx) {
-              return '<div class="p-3.5 rounded-2xl bg-white border border-slate-200 flex items-center justify-between gap-3">' +
-                '<div class="min-w-0">' +
+              var aktif = isSoalActive(j);
+              var statusBadge = aktif
+                ? '<span class="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 mr-1.5">Aktif</span>'
+                : '<span class="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 mr-1.5">Nonaktif</span>';
+              var toggleBtn = aktif
+                ? '<button type="button" onclick="toggleJadwalStatus(' + idx + ')" class="px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold transition">Nonaktifkan</button>'
+                : '<button type="button" onclick="toggleJadwalStatus(' + idx + ')" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold transition">Aktifkan</button>';
+              return '<div class="p-3.5 rounded-2xl bg-white border ' + (aktif ? 'border-emerald-200' : 'border-slate-200 opacity-80') + ' flex flex-wrap items-center justify-between gap-3">' +
+                '<div class="min-w-0 flex-1">' +
+                  statusBadge +
                   '<span class="inline-block text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 mr-1.5">' + (j.mapel || "Mapel") + '</span>' +
                   '<span class="text-xs font-extrabold text-slate-900">' + (j.judul || "Ujian") + '</span>' +
-                  '<p class="text-[11px] text-slate-500 truncate mt-0.5">' + (j.url || "-") + ' • ' + (j.durasi || "90 Menit") + '</p>' +
+                  '<p class="text-[11px] text-slate-500 truncate mt-0.5">' + (j.url || "-") + '</p>' +
                 '</div>' +
-                '<button type="button" onclick="removeJadwal(' + idx + ')" class="text-xs font-bold text-rose-600 hover:underline shrink-0">Hapus</button>' +
+                '<div class="flex items-center gap-2 shrink-0">' +
+                  toggleBtn +
+                  '<button type="button" onclick="removeJadwal(' + idx + ')" class="px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-xs font-bold text-rose-600">Hapus</button>' +
+                '</div>' +
               '</div>';
             }).join("")
           : '<p class="text-xs text-slate-500">Belum ada soal atau link Google Form yang ditambahkan.</p>';
@@ -1129,14 +1135,13 @@
       var mapel = document.getElementById("newJadwalMapel").value.trim();
       var judul = document.getElementById("newJadwalJudul").value.trim();
       var rawUrl = document.getElementById("newJadwalUrl").value.trim();
-      var durasi = document.getElementById("newJadwalDurasi").value.trim() || "90 Menit";
 
       var payloadJadwal = {
         mapel: mapel,
         judul: judul,
         url: rawUrl,
-        durasi: durasi,
-        status: "Aktif"
+        status: "Aktif",
+        is_active: true
       };
 
       if (!IS_PREVIEW && sbClient) {
@@ -1145,14 +1150,11 @@
           if (!insJ.error) {
             stateData.jadwal.unshift(insJ.data || payloadJadwal);
           } else {
-            // Fallback jika database menggunakan tabel sesi_ujian dari database_setup.sql
-            var durasiNum = parseInt(durasi, 10) || 90;
             var payloadSesi = {
               judul_ujian: judul,
               mata_pelajaran: mapel,
               url_portal: rawUrl,
               token_ujian: "MAN4HST",
-              durasi_menit: durasiNum,
               is_active: true
             };
             var insS = await sbClient.from("sesi_ujian").insert([payloadSesi]).select().single();
@@ -1165,7 +1167,7 @@
               mapel: mapel,
               judul: judul,
               url: rawUrl,
-              durasi: durasiNum + " Menit",
+              is_active: true,
               _fromSesi: true
             });
           }
@@ -1178,9 +1180,49 @@
       }
 
       event.target.reset();
-      document.getElementById("newJadwalDurasi").value = "90 Menit";
       refreshAdminViews();
       showToast("Soal & link Google Form berhasil disimpan!");
+    }
+
+    async function toggleJadwalStatus(idx) {
+      var target = stateData.jadwal[idx];
+      if (!target) return;
+      var nextState = !isSoalActive(target);
+
+      if (!IS_PREVIEW && sbClient && target.id) {
+        try {
+          if (target._fromSesi) {
+            var upS = await sbClient.from("sesi_ujian").update({ is_active: nextState }).eq("id", target.id);
+            if (upS.error) {
+              showToast("Gagal mengubah status soal: " + upS.error.message, true);
+              return;
+            }
+          } else {
+            var upJ = await sbClient.from("jadwal_ujian").update({
+              is_active: nextState,
+              status: nextState ? "Aktif" : "Nonaktif"
+            }).eq("id", target.id);
+            if (upJ.error) {
+              // Fallback jika tabel jadwal_ujian hanya punya kolom status
+              var upJ2 = await sbClient.from("jadwal_ujian").update({
+                status: nextState ? "Aktif" : "Nonaktif"
+              }).eq("id", target.id);
+              if (upJ2.error) {
+                showToast("Gagal mengubah status soal: " + upJ2.error.message, true);
+                return;
+              }
+            }
+          }
+        } catch (e) {
+          showToast("Kesalahan jaringan saat mengubah status soal.", true);
+          return;
+        }
+      }
+
+      target.is_active = nextState;
+      target.status = nextState ? "Aktif" : "Nonaktif";
+      refreshAdminViews();
+      showToast(nextState ? "Soal diaktifkan dan tampil di layar peserta." : "Soal dinonaktifkan dan disembunyikan dari peserta.");
     }
 
     async function removeJadwal(idx) {
