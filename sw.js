@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lms-anticurang-man4hst-v3';
+const CACHE_NAME = 'lms-anticurang-man4hst-v4';
 const PRECACHE_URLS = [
   '/',
   '/index.html',
